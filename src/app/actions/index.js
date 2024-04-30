@@ -12,17 +12,18 @@ async function registerUser(formData) {
 }
 
 
-async function performLogin(formData){
-    const credentials = {};
-    credentials.email = formData.get('email');
-    credentials.password = formData.get('password');
+async function performLogin(formData) {
+    try {
+        const credentials = {};
+        credentials.email = formData.get('email');
+        credentials.password = formData.get('password');
 
-    const found = await findUserCredentials(credentials);
+        const found = await findUserCredentials(credentials);
+        
+        return found;
 
-    if(found){
-        redirect('/');
-    } else {
-        throw new Error('Invalid credentials');
+    } catch (err) {
+        throw new Error(err);
     }
 
 }
@@ -31,6 +32,6 @@ async function performLogin(formData){
 
 
 export {
-    registerUser,
-    performLogin
+    performLogin, registerUser
 };
+

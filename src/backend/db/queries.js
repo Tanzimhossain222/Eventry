@@ -1,7 +1,7 @@
 import { eventModel } from "@/backend/models/event-models";
 import { replaceMongoIdInArray, replaceMongoIdInObject } from "@/utils/data-utils";
-import { dbConnect } from "../services/mongo";
 import { userModel } from "../models/user-models";
+import { dbConnect } from "../services/mongo";
 
 async function getAllEvents() {
     await dbConnect();
@@ -16,18 +16,23 @@ async function getEventById(eventId) {
     return replaceMongoIdInObject(event);
 }
 
-async function createUser(user){
+async function createUser(user) {
     return await userModel.create(user);
 }
 
-async function findUserCredentials(credentials){
+async function findUserCredentials(credentials) {
     const user = await userModel.findOne(credentials).lean();
-    return user;
+
+    if (user) {
+        return replaceMongoIdInObject(user);
+    }
+
+    return null;
 }
 
 export {
-    getAllEvents,
-    getEventById,
     createUser,
-    findUserCredentials
+    findUserCredentials, getAllEvents,
+    getEventById
 };
+
