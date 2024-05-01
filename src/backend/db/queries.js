@@ -5,11 +5,24 @@ import { userModel } from "../models/user-models";
 import { dbConnect } from "../services/mongo";
 
 
-async function getAllEvents() {
+async function getAllEvents(query) {
     await dbConnect();
-    const allEvents = await eventModel.find().lean();
+    let allEvents = [];
+
+    if (query){
+        const regex = new RegExp(query, 'i');
+        allEvents = await eventModel.find({
+            $or: [
+                { name: { $regex: regex } },
+                { location: { $regex: regex } },
+                { details: { $regex: regex } }
+            ]
+        }).lean();
+    } else {
+        allEvents = await eventModel.find().lean();
+    }
     return replaceMongoIdInArray(allEvents);
-    return allEvents;
+    
 }
 
 async function getEventById(eventId) {
