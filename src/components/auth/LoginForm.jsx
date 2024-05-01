@@ -23,7 +23,6 @@ const LoginForm = () => {
       } else {
         setError("Invalid credentials");
       }
-      
     } catch (err) {
       setError(err.message);
     }
